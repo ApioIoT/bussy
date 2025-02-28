@@ -1,6 +1,8 @@
 import EventEmitter2 from 'eventemitter2'
 import { v4 as uuidv4 } from 'uuid'
 
+export type UnsubscribeFn = () => void
+
 class EventBus {
   constructor(private emitter: EventEmitter2) {}
 
@@ -22,7 +24,7 @@ class DataBus<T> {
   
   constructor(private emitter: EventEmitter2) {}
 
-  onData(cb: (data: T) => void): () => void {
+  onData(cb: (data: T) => void): UnsubscribeFn {
     this.emitter.on(this.topic, cb)
 
     return () => {
@@ -53,7 +55,7 @@ class ReqRes<T, K> {
     this.emitter.emit(this.topicRequest, data)
   }
 
-  onRequest(cb: (data: T, reply: (data: K) => void) => void): () => void {
+  onRequest(cb: (data: T, reply: (data: K) => void) => void): UnsubscribeFn {
     if (this.hasListener) {
       throw new Error('Listener already exists')
     }
