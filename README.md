@@ -64,11 +64,20 @@ chat.onRequest((data, reply) => {
   reply(len)
 })
 
-chat.request('Ciao', (res, err) => {
+chat.request('Messaggio', (res, err) => {
   if (err) {
     console.error(err)
   } else {
     console.log(res)
   }
 })
+
+// Or in async version
+
+try {
+  const res = await chat.requestAsync('Messaggio async')
+  console.log(res)
+} catch (e) {
+  console.error(e)
+}
 ```

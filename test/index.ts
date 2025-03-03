@@ -27,7 +27,7 @@ data.publish({ id: 2, name: 'Piero' })
 
 const chat = Bussy.createReqResBus<string, number>()
 
-const unsub3 = chat.onRequest((data, reply) => {
+chat.onRequest((data, reply) => {
   reply(data.length)
 })
 
@@ -37,14 +37,15 @@ chat.request('Messaggio 1', (res, err) => {
   } else {
     console.log(res)
   }
-
-  unsub3()
 })
 
-chat.request('Messaggio 2', (res, err) => {
-  if (err) {
-    console.error(err)
-  } else {
+const main = async () => {
+  try {
+    const res = await chat.requestAsync('Messaggio async')
     console.log(res)
+  } catch (e) {
+    console.error(e)
   }
-})
+}
+
+main()

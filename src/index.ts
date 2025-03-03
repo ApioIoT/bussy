@@ -55,6 +55,18 @@ class ReqRes<T, K> {
     this.emitter.emit(this.topicRequest, data)
   }
 
+  requestAsync(data: T): Promise<K> {
+    return new Promise((resolve, reject) => {
+      this.request(data, (data, err) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(data!)
+        }
+      })
+    })
+  }
+
   onRequest(cb: (data: T, reply: (data: K) => void) => void): UnsubscribeFn {
     if (this.hasListener) {
       throw new Error('Listener already exists')
