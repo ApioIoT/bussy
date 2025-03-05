@@ -1,3 +1,6 @@
+# 📦 1.0.5 (5 Mar 2025)
+- [6995f](https://github.com/ApioIoT/bussy/commit/6995ff2040d750eee159218da3f56db76d855b8f)  📦 Release 1.0.5 [skip ci]
+- [1b6ba](https://github.com/ApioIoT/bussy/commit/1b6ba3b51df620938d9117e5218ddc1998149206)  fix: package.json
 # 📦 1.0.4 (5 Mar 2025)
 - [6ea0e](https://github.com/ApioIoT/bussy/commit/6ea0eb765060c0501bf29b53597c2912787bec1f)  📦 Release 1.0.4 [skip ci]
 - [6154f](https://github.com/ApioIoT/bussy/commit/6154f4f666ac6238d0f07c950df644c53bb79f14)  fix: request/reply bug
