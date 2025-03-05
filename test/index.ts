@@ -25,13 +25,13 @@ const unsub2 = data.onData((user) => {
 data.publish({ id: 1, name: 'Mario' })
 data.publish({ id: 2, name: 'Piero' })
 
-const chat = Bussy.createReqResBus<string, number>()
+const request = Bussy.createRequestBus<string, number>()
 
-chat.onRequest((data, reply) => {
+request.listen((data, reply) => {
   reply(data.length)
 })
 
-chat.request('Messaggio 1', (res, err) => {
+request.create('Messaggio', (res, err) => {
   if (err) {
     console.error(err)
   } else {
@@ -41,7 +41,7 @@ chat.request('Messaggio 1', (res, err) => {
 
 const main = async () => {
   try {
-    const res = await chat.requestAsync('Messaggio async')
+    const res = await request.createAsync('Messaggio async')
     console.log(res)
   } catch (e) {
     console.error(e)

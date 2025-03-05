@@ -1,7 +1,17 @@
 import EventEmitter2 from 'eventemitter2'
 import { v4 as uuidv4 } from 'uuid'
 
+export class BussyError extends Error {}
 export type UnsubscribeFn = () => void
+
+type RequestPayload<T> = { 
+  uuid: string
+  data: T
+}
+
+type ReplyPayload<T> = {
+  data: T
+}
 
 class EventBus {
   constructor(private emitter: EventEmitter2) {}
@@ -37,27 +47,33 @@ class DataBus<T> {
   }
 }
 
-class ReqRes<T, K> {
-  private topicRequest = uuidv4()
-  private topicResponse = uuidv4()
-
+class RequestBus<T, K> {
   private hasListener = false
+  private uuid = uuidv4()
 
   constructor(private emitter: EventEmitter2) {}
 
-  request(data: T, onReply: (res?: K, err?: Error) => void) {
+  create(data: T, onReply: (res?: K, err?: Error) => void) {
     if (!this.hasListener) {
-      onReply(undefined, new Error('Missing listener for request'))
+      onReply(undefined, new BussyError('Missing listener for request'))
       return
     }
 
-    this.emitter.once(this.topicResponse, onReply)
-    this.emitter.emit(this.topicRequest, data)
+    const uuid = uuidv4()
+    const request: RequestPayload<T> = {
+      uuid,
+      data
+    }
+
+    this.emitter.once(['reply', this.uuid, uuid], (data: ReplyPayload<K>) => {
+      onReply(data.data)
+    })
+    this.emitter.emit(['request', this.uuid, uuid], request)
   }
 
-  requestAsync(data: T): Promise<K> {
+  createAsync(data: T): Promise<K> {
     return new Promise((resolve, reject) => {
-      this.request(data, (data, err) => {
+      this.create(data, (data, err) => {
         if (err) {
           reject(err)
         } else {
@@ -67,23 +83,25 @@ class ReqRes<T, K> {
     })
   }
 
-  onRequest(cb: (data: T, reply: (data: K) => void) => void): UnsubscribeFn {
+  listen(cb: (req: T, reply: (res: K) => void) => void): UnsubscribeFn {
     if (this.hasListener) {
-      throw new Error('Listener already exists')
+      throw new BussyError('Listener already exists')
     }
 
     this.hasListener = true
-
-    const f = (data: T) => {
-      cb(data, (res) => {
-        this.emitter.emit(this.topicResponse, res)
+    const f = (data: RequestPayload<T>) => {
+      cb(data.data, (res) => {
+        const response: ReplyPayload<K> = {
+          data: res
+        }
+        this.emitter.emit(['reply', this.uuid, data.uuid], response)
       })
     }
-    this.emitter.on(this.topicRequest, f)
+    this.emitter.on(['request', this.uuid, '*'], f)
 
     return () => {
-      this.emitter.off(this.topicRequest, f)
       this.hasListener = false
+      this.emitter.off(['request', this.uuid, '*'], f)
     }
   }
 }
@@ -106,8 +124,8 @@ abstract class Bussy {
     return new DataBus<T>(this.emitter)
   }
 
-  static createReqResBus<T, K>() {
-    return new ReqRes<T, K>(this.emitter)
+  static createRequestBus<T, K>() {
+    return new RequestBus<T, K>(this.emitter)
   }
 }
 

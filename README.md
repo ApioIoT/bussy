@@ -50,21 +50,21 @@ data.publish({
 })
 ```
 
-### Request/Reply
+### Request / Reply
 
-Events bus implementing Request/Reply pattern.
+Events bus implementing `Request/Reply` pattern.
 
 ```typescript
 import Bussy from '@apio/bussy'
 
-const chat = Bussy.createReqResBus<string, number>()
+const request = Bussy.createRequestBus<string, number>()
 
-chat.onRequest((data, reply) => {
+request.listen((data, reply) => {
   const len = data.length
   reply(len)
 })
 
-chat.request('Messaggio', (res, err) => {
+request.create('Messaggio', (res, err) => {
   if (err) {
     console.error(err)
   } else {
@@ -72,12 +72,16 @@ chat.request('Messaggio', (res, err) => {
   }
 })
 
-// Or in async version
+// Or with a Promise version
 
 try {
-  const res = await chat.requestAsync('Messaggio async')
+  const res = await request.createAsync('Messaggio async')
   console.log(res)
 } catch (e) {
   console.error(e)
 }
 ```
+
+## Todo
+
+* Implements **timeout** feature in `Request/Reply` pattern.
