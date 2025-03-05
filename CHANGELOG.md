@@ -1,3 +1,6 @@
+# 📦 1.0.3 (3 Mar 2025)
+- [72118](https://github.com/ApioIoT/bussy/commit/72118d08e5972b05dd5fdea8184ce459993179b0)  📦 Release 1.0.3 [skip ci]
+- [0aad3](https://github.com/ApioIoT/bussy/commit/0aad3781022bedbbe88548bb52f48332fa17a32e)  feat: add assync version of request method
 # 📦 1.0.2 (28 Feb 2025)
 - [8830b](https://github.com/ApioIoT/bussy/commit/8830b356fcbb6203f94c7a2a75dddcaa857f9de4)  📦 Release 1.0.2 [skip ci]
 - [312e6](https://github.com/ApioIoT/bussy/commit/312e677dbcbed5f99739b79a64cb83c95eaf9b18)  feat: export UnsubscribeFn type
