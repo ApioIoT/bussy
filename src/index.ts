@@ -2,7 +2,12 @@ import EventEmitter2 from 'eventemitter2'
 import { v4 as uuidv4 } from 'uuid'
 
 export class BussyError extends Error {}
+
 export type UnsubscribeFn = () => void
+export type EventListener = (...values: unknown[]) => void
+export type DataListener<T> = (data: T) => void
+export type RequestListener<T, K> = (req: T, reply: (res: K) => void) => void
+export type ReplyFn<T> = (res?: T, err?: Error) => void
 
 type RequestPayload<T> = { 
   uuid: string
@@ -16,7 +21,7 @@ type ReplyPayload<T> = {
 class EventBus {
   constructor(private emitter: EventEmitter2) {}
 
-  on(event: string, listener: (...values: unknown[]) => void): () => void {
+  on(event: string, listener: EventListener): () => void {
     this.emitter.on(event, listener)
 
     return () => {
@@ -34,11 +39,11 @@ class DataBus<T> {
   
   constructor(private emitter: EventEmitter2) {}
 
-  onData(cb: (data: T) => void): UnsubscribeFn {
-    this.emitter.on(this.topic, cb)
+  onData(listener: DataListener<T>): UnsubscribeFn {
+    this.emitter.on(this.topic, listener)
 
     return () => {
-      this.emitter.off(this.topic, cb)
+      this.emitter.off(this.topic, listener)
     }
   }
 
@@ -53,7 +58,7 @@ class RequestBus<T, K> {
 
   constructor(private emitter: EventEmitter2) {}
 
-  create(data: T, onReply: (res?: K, err?: Error) => void) {
+  create(data: T, onReply: ReplyFn<K>) {
     if (!this.hasListener) {
       onReply(undefined, new BussyError('Missing listener for request'))
       return
@@ -83,14 +88,14 @@ class RequestBus<T, K> {
     })
   }
 
-  listen(cb: (req: T, reply: (res: K) => void) => void): UnsubscribeFn {
+  listen(listener: RequestListener<T, K>): UnsubscribeFn {
     if (this.hasListener) {
       throw new BussyError('Listener already exists')
     }
 
     this.hasListener = true
     const f = (data: RequestPayload<T>) => {
-      cb(data.data, (res) => {
+      listener(data.data, (res) => {
         const response: ReplyPayload<K> = {
           data: res
         }
