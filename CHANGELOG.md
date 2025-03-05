@@ -1,3 +1,6 @@
+# 📦 1.0.4 (5 Mar 2025)
+- [6ea0e](https://github.com/ApioIoT/bussy/commit/6ea0eb765060c0501bf29b53597c2912787bec1f)  📦 Release 1.0.4 [skip ci]
+- [6154f](https://github.com/ApioIoT/bussy/commit/6154f4f666ac6238d0f07c950df644c53bb79f14)  fix: request/reply bug
 # 📦 1.0.3 (3 Mar 2025)
 - [72118](https://github.com/ApioIoT/bussy/commit/72118d08e5972b05dd5fdea8184ce459993179b0)  📦 Release 1.0.3 [skip ci]
 - [0aad3](https://github.com/ApioIoT/bussy/commit/0aad3781022bedbbe88548bb52f48332fa17a32e)  feat: add assync version of request method
