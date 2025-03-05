@@ -9,20 +9,29 @@ export type EventListener = (event: string, ...values: any[]) => void
 export type DataListener<T> = (data: T) => void
 export type RequestListener<T, K> = (req: T, reply: (res: K) => void) => void
 export type ReplyFn<T> = (res?: T, err?: Error) => void
+type RequestPayload<T> = { uuid: string, data: T }
+type ReplyPayload<T> = { data: T }
 
-type RequestPayload<T> = { 
-  uuid: string
-  data: T
+export interface EventBus {
+  on(event: string, listener: EventListener): UnsubscribeFn
+  emit: (event: string, ...values: unknown[]) => void
 }
 
-type ReplyPayload<T> = {
-  data: T
+export interface DataBus<T> {
+  listen: (listener: DataListener<T>) => UnsubscribeFn
+  publish: (data: T) => void
 }
 
-class EventBus {
+export interface RequestBus<T, K> {
+  listen: (listener: RequestListener<T, K>) => UnsubscribeFn 
+  create: (data: T, onReply: ReplyFn<K>) => void
+  createAsync: (data: T) => Promise<K>
+}
+
+class MyEventBus implements EventBus {
   constructor(private emitter: EventEmitter2) {}
 
-  on(event: string, listener: EventListener): () => void {
+  on(event: string, listener: EventListener): UnsubscribeFn {
     this.emitter.on(event, listener)
 
     return () => {
@@ -35,7 +44,7 @@ class EventBus {
   }
 }
 
-class DataBus<T> {
+class MyDataBus<T> implements DataBus<T> {
   private topic = uuidv4()
   
   constructor(private emitter: EventEmitter2) {}
@@ -53,7 +62,7 @@ class DataBus<T> {
   }
 }
 
-class RequestBus<T, K> {
+class MyRequestBus<T, K> implements RequestBus<T, K> {
   private hasListener = false
   private uuid = uuidv4()
 
@@ -122,16 +131,16 @@ abstract class Bussy {
     ignoreErrors: true
   })
 
-  static createEventBus() {
-    return new EventBus(this.emitter)
+  static createEventBus(): EventBus {
+    return new MyEventBus(this.emitter)
   }
 
-  static createDataBus<T>() {
-    return new DataBus<T>(this.emitter)
+  static createDataBus<T>(): DataBus<T> {
+    return new MyDataBus<T>(this.emitter)
   }
 
-  static createRequestBus<T, K>() {
-    return new RequestBus<T, K>(this.emitter)
+  static createRequestBus<T, K>(): RequestBus<T, K> {
+    return new MyRequestBus<T, K>(this.emitter)
   }
 }
 
