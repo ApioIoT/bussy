@@ -1,3 +1,6 @@
+# 📦 1.0.6 (5 Mar 2025)
+- [44247](https://github.com/ApioIoT/bussy/commit/44247c4086b7186410a8dd110c751699a3a63530)  📦 Release 1.0.6 [skip ci]
+- [c4c3c](https://github.com/ApioIoT/bussy/commit/c4c3c883c4af6e9e00c48f97ff9fd7a240c1ce69)  feat: add callback types
 # 📦 1.0.5 (5 Mar 2025)
 - [6995f](https://github.com/ApioIoT/bussy/commit/6995ff2040d750eee159218da3f56db76d855b8f)  📦 Release 1.0.5 [skip ci]
 - [1b6ba](https://github.com/ApioIoT/bussy/commit/1b6ba3b51df620938d9117e5218ddc1998149206)  fix: package.json
