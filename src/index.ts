@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from 'uuid'
 export class BussyError extends Error {}
 
 export type UnsubscribeFn = () => void
-export type EventListener = (...values: unknown[]) => void
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type EventListener = (event: string, ...values: any[]) => void
 export type DataListener<T> = (data: T) => void
 export type RequestListener<T, K> = (req: T, reply: (res: K) => void) => void
 export type ReplyFn<T> = (res?: T, err?: Error) => void
@@ -30,7 +31,7 @@ class EventBus {
   }
 
   emit(event: string, ...values: unknown[]) {
-    this.emitter.emit(event, ...values)
+    this.emitter.emit(event, event, ...values)
   }
 }
 
@@ -39,7 +40,7 @@ class DataBus<T> {
   
   constructor(private emitter: EventEmitter2) {}
 
-  onData(listener: DataListener<T>): UnsubscribeFn {
+  listen(listener: DataListener<T>): UnsubscribeFn {
     this.emitter.on(this.topic, listener)
 
     return () => {

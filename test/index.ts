@@ -2,13 +2,12 @@ import Bussy from '../src'
 
 const events = Bussy.createEventBus()
 
-const unsub1 = events.on('test.*', () => {
-  console.log('Nuovo messaggio')
-  unsub1()
+events.on('test.*', (event, data, d) => {
+  console.log(event, data, d)
 })
 
-events.emit('test.a')
-events.emit('test.b')
+events.emit('test.a', 'Ciao', 'Mondo')
+events.emit('test.b', 'Mondo')
 
 type User = {
   id: number
@@ -17,7 +16,7 @@ type User = {
 
 const data = Bussy.createDataBus<User>()
 
-const unsub2 = data.onData((user) => {
+const unsub2 = data.listen((user) => {
   console.log(user.id, user.name)
   unsub2()
 })

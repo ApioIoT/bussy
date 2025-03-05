@@ -19,11 +19,12 @@ import Bussy from '@apio/bussy'
 
 const events = Bussy.createEventBus()
 
-events.on('test.*', () => {
-  console.log('Nuovo messaggio')
+events.on('test.*', (event, data) => {
+  console.log(`New event: ${event}: ${data}`)
+  // New event: test.a: sample data
 })
 
-events.emit('test.a')
+events.emit('test.a', 'sample data')
 ```
 
 ### DataBus
@@ -40,11 +41,11 @@ type User = {
 
 const dataBus = Bussy.createDataBus<User>()
 
-data.onData((user: User) => {
+dataBus.listen((user: User) => {
   console.log(user.username, user.password)
 })
 
-data.publish({ 
+dataBus.publish({ 
   username: 'username',
   password: 'password'
 })
