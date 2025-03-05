@@ -1,3 +1,6 @@
+# 📦 1.0.7 (5 Mar 2025)
+- [95950](https://github.com/ApioIoT/bussy/commit/959504f50df2cda4ac0708ccddfa553225a72f5b)  📦 Release 1.0.7 [skip ci]
+- [3d002](https://github.com/ApioIoT/bussy/commit/3d0028e1b9b5c1a9d70d6e6312a22e76c89723c9)  feat: add event name into on callback. Renamed DataBus onData in listen.
 # 📦 1.0.6 (5 Mar 2025)
 - [44247](https://github.com/ApioIoT/bussy/commit/44247c4086b7186410a8dd110c751699a3a63530)  📦 Release 1.0.6 [skip ci]
 - [c4c3c](https://github.com/ApioIoT/bussy/commit/c4c3c883c4af6e9e00c48f97ff9fd7a240c1ce69)  feat: add callback types
